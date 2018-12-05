@@ -1,4 +1,4 @@
-import qualified System.Random as R
+import System.Random (randomRIO)
 
 wrapWidth :: Int
 wrapWidth = 80
@@ -44,8 +44,8 @@ wrap = uncurry (++) . foldl wrapper ("", "") . words
 main :: IO ()
 main = do
   contents <- getContents
-  gen <- R.getStdGen
   let entries = process contents
-  let [quote, meta, title] = entries !! fst (R.randomR (0, length entries) gen)
+  index <- randomRIO (0, pred $ length entries)
+  let [quote, meta, title] = entries !! index
   let page = takeWhile (/= ' ') $ drop highlightPrefixLen meta
   putStr $ "\n" ++ wrap quote ++ "\n\n" ++ wrap (title ++ "p" ++ page) ++ "\n\n"
