@@ -48,4 +48,4 @@ main = do
   index <- randomRIO (0, pred $ length entries)
   let [quote, meta, title] = entries !! index
   let page = takeWhile (/= ' ') $ drop highlightPrefixLen meta
-  putStr $ "\n" ++ wrap quote ++ "\n\n" ++ wrap (title ++ "p" ++ page) ++ "\n\n"
+  putStrLn $ "\n" ++ wrap quote ++ "\n\n" ++ wrap (title ++ "p" ++ page) ++ "\n"
