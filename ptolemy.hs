@@ -1,22 +1,13 @@
 import System.Random (randomRIO)
 
-wrapWidth :: Int
-wrapWidth = 80
-
-lineEnd :: String
-lineEnd = "\r"
-
-splitter :: String
-splitter = "==========" ++ lineEnd
-
-bookmarkPrefix :: String
-bookmarkPrefix = "- Your Bookmark"
-
-prefixLen :: Int
-prefixLen = length bookmarkPrefix
-
-highlightPrefixLen :: Int
-highlightPrefixLen = length "- Your Highlight on Page "
+main :: IO ()
+main = do
+  contents <- getContents
+  let entries = process contents
+  index <- randomRIO (0, pred $ length entries)
+  let [quote, meta, title] = entries !! index
+  let page = takeWhile (/= ' ') $ drop highlightPrefixLen meta
+  putStrLn $ "\n" ++ wrap quote ++ "\n\n" ++ wrap (title ++ "p" ++ page) ++ "\n"
 
 folder :: String -> ([[String]], [String]) -> ([[String]], [String])
 folder line (blocks, currentBlock)
@@ -41,11 +32,20 @@ wrapper (acc, currentLine) word =
 wrap :: String -> String
 wrap = uncurry (++) . foldl wrapper ("", "") . words
 
-main :: IO ()
-main = do
-  contents <- getContents
-  let entries = process contents
-  index <- randomRIO (0, pred $ length entries)
-  let [quote, meta, title] = entries !! index
-  let page = takeWhile (/= ' ') $ drop highlightPrefixLen meta
-  putStrLn $ "\n" ++ wrap quote ++ "\n\n" ++ wrap (title ++ "p" ++ page) ++ "\n"
+wrapWidth :: Int
+wrapWidth = 80
+
+lineEnd :: String
+lineEnd = "\r"
+
+splitter :: String
+splitter = "==========" ++ lineEnd
+
+bookmarkPrefix :: String
+bookmarkPrefix = "- Your Bookmark"
+
+prefixLen :: Int
+prefixLen = length bookmarkPrefix
+
+highlightPrefixLen :: Int
+highlightPrefixLen = length "- Your Highlight on Page "
