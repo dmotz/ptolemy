@@ -26,7 +26,7 @@ folder line (blocks, currentBlock)
 
 predicate :: [String] -> Bool
 predicate [] = False
-predicate block = take prefixLen (head block) /= bookmarkPrefix
+predicate (x:_) = take prefixLen x /= bookmarkPrefix
 
 process :: String -> [[String]]
 process = filter predicate . fst . foldr folder ([], []) . lines
