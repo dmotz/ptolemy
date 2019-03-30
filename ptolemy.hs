@@ -11,13 +11,14 @@ main = do
       let [quote, meta, title] = entries !! index
       putStrLn $
         concat
-          [ "\n"
+          [ nl
           , wrap quote
-          , "\n\n"
+          , nl
+          , nl
           , wrap $
             concat
               [title, "p", takeWhile (/= ' ') $ drop highlightPrefixLen meta]
-          , "\n"
+          , nl
           ]
 
 folder :: String -> ([[String]], [String]) -> ([[String]], [String])
@@ -37,7 +38,7 @@ wrapper :: (String, String) -> String -> (String, String)
 wrapper (acc, currentLine) word =
   let newLine = concat [currentLine, word, " "]
   in if length newLine > wrapWidth
-       then (concat [acc, currentLine, "\n"], word ++ " ")
+       then (concat [acc, currentLine, nl], word ++ " ")
        else (acc, newLine)
 
 wrap :: String -> String
@@ -60,3 +61,6 @@ prefixLen = length bookmarkPrefix
 
 highlightPrefixLen :: Int
 highlightPrefixLen = length "- Your Highlight on Page "
+
+nl :: String
+nl = "\n"
