@@ -6,8 +6,15 @@ main = do
   let entries = process contents
   index <- randomRIO (0, pred $ length entries)
   let [quote, meta, title] = entries !! index
-  let page = takeWhile (/= ' ') $ drop highlightPrefixLen meta
-  putStrLn $ "\n" ++ wrap quote ++ "\n\n" ++ wrap (title ++ "p" ++ page) ++ "\n"
+  putStrLn $
+    concat
+      [ "\n"
+      , wrap quote
+      , "\n\n"
+      , wrap $
+        concat [title, "p", takeWhile (/= ' ') $ drop highlightPrefixLen meta]
+      , "\n"
+      ]
 
 folder :: String -> ([[String]], [String]) -> ([[String]], [String])
 folder line (blocks, currentBlock)
@@ -24,13 +31,13 @@ process = filter predicate . fst . foldr folder ([], []) . lines
 
 wrapper :: (String, String) -> String -> (String, String)
 wrapper (acc, currentLine) word =
-  let newLine = currentLine ++ word ++ " "
+  let newLine = concat [currentLine, word, " "]
   in if length newLine > wrapWidth
-       then (acc ++ currentLine ++ "\n", word ++ " ")
+       then (concat [acc, currentLine, "\n"], word ++ " ")
        else (acc, newLine)
 
 wrap :: String -> String
-wrap = uncurry (++) . foldl wrapper ("", "") . words
+wrap = uncurry (++) . foldl wrapper ([], []) . words
 
 wrapWidth :: Int
 wrapWidth = 80
