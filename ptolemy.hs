@@ -4,17 +4,21 @@ main :: IO ()
 main = do
   contents <- getContents
   let entries = process contents
-  index <- randomRIO (0, pred $ length entries)
-  let [quote, meta, title] = entries !! index
-  putStrLn $
-    concat
-      [ "\n"
-      , wrap quote
-      , "\n\n"
-      , wrap $
-        concat [title, "p", takeWhile (/= ' ') $ drop highlightPrefixLen meta]
-      , "\n"
-      ]
+  if entries == []
+    then putStrLn "no entries found"
+    else do
+      index <- randomRIO (0, pred $ length entries)
+      let [quote, meta, title] = entries !! index
+      putStrLn $
+        concat
+          [ "\n"
+          , wrap quote
+          , "\n\n"
+          , wrap $
+            concat
+              [title, "p", takeWhile (/= ' ') $ drop highlightPrefixLen meta]
+          , "\n"
+          ]
 
 folder :: String -> ([[String]], [String]) -> ([[String]], [String])
 folder line (blocks, currentBlock)
