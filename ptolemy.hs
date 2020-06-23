@@ -9,7 +9,7 @@ main :: IO ()
 main = do
   contents <- getContents
   let entries = process $ unpack $ decodeUtf8With lenientDecode contents
-  if entries == []
+  if null entries
     then putStrLn "no entries found"
     else do
       index <- randomRIO (0, pred $ length entries)
