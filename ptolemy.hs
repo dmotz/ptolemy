@@ -1,9 +1,14 @@
+import Prelude hiding (getContents)
+import Data.ByteString (getContents)
+import Data.Text (unpack)
+import Data.Text.Encoding (decodeUtf8With)
+import Data.Text.Encoding.Error (lenientDecode)
 import System.Random (randomRIO)
 
 main :: IO ()
 main = do
   contents <- getContents
-  let entries = process contents
+  let entries = process $ unpack $ decodeUtf8With lenientDecode contents
   if entries == []
     then putStrLn "no entries found"
     else do
