@@ -56,7 +56,7 @@ lineEnd :: String
 lineEnd = "\r"
 
 splitter :: String
-splitter = "==========" ++ lineEnd
+splitter = (take 10 $ repeat '=') ++ lineEnd
 
 bookmarkPrefix :: String
 bookmarkPrefix = "- Your Bookmark"
