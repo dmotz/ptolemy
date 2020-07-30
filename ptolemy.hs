@@ -3,6 +3,7 @@ import Data.ByteString (getContents)
 import Data.Text (unpack)
 import Data.Text.Encoding (decodeUtf8With)
 import Data.Text.Encoding.Error (lenientDecode)
+import System.Exit (die)
 import System.Random (randomRIO)
 
 main :: IO ()
@@ -10,7 +11,7 @@ main = do
   contents <- getContents
   let entries = process $ unpack $ decodeUtf8With lenientDecode contents
   if null entries
-    then putStrLn "no entries found"
+    then die "no entries found"
     else do
       index <- randomRIO (0, pred $ length entries)
       let [quote, meta, title] = entries !! index
